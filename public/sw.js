@@ -3,11 +3,12 @@
    Caches the app so it opens offline once installed.
    Bump CACHE when you change any file so users get the update.
    ========================================================= */
-const CACHE = 'gymmy-v1';
+const CACHE = 'gymmy-v2';
 
+// Only './' for the page: hosts like Cloudflare redirect index.html to the
+// folder URL, and a cached redirect breaks navigations served from the cache.
 const APP_SHELL = [
   './',
-  'index.html',
   'css/styles.css',
   'js/data.js',
   'js/i18n.js',
@@ -48,10 +49,10 @@ self.addEventListener('fetch', (event) => {
       const cached = await cache.match(request, { ignoreSearch: sameOrigin });
       const network = fetch(request)
         .then((response) => {
-          if (response.ok || response.type === 'opaque') cache.put(request, response.clone());
+          if ((response.ok && !response.redirected) || response.type === 'opaque') cache.put(request, response.clone());
           return response;
         })
-        .catch(() => (request.mode === 'navigate' ? cache.match('index.html') : undefined));
+        .catch(() => (request.mode === 'navigate' ? cache.match('./') : undefined));
       return cached || network;
     })
   );

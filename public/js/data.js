@@ -1594,5 +1594,119 @@ window.GYMMY_DATA = (function () {
     },
   ];
 
-  return { MUSCLES, LOCATIONS, LEVELS, GENDERS, PLANS, FOCUS, EXERCISES, WORKOUTS };
+  /*
+   * Store products (no images: cards are typographic)
+   *   type      'digital' (downloadable plan) or 'gear' (physical product); drives the shop filter
+   *   category  badge on the card: 'program', 'nutrition' or 'equipment'
+   *   price     Saudi riyals, all-inclusive
+   *   specs     label/value rows shown on the card
+   */
+  const PRODUCT_TYPES = ['digital', 'gear'];
+
+  const PRODUCTS = [
+    {
+      id: 'resistance-plan',
+      type: 'digital',
+      category: 'program',
+      price: 49,
+      name: { en: 'Complete Resistance Training Plan', ar: 'جدول تمارين مقاومة شامل' },
+      desc: {
+        en: 'A 12-week progressive plan for home or the gym, with weekly progress sheets.',
+        ar: 'برنامج متدرّج لمدة 12 أسبوعاً للمنزل أو النادي، مع جداول متابعة أسبوعية.',
+      },
+      specs: [
+        { en: ['Duration', '12 weeks'], ar: ['المدة', '12 أسبوعاً'] },
+        { en: ['Schedule', '4 days a week'], ar: ['الجدول', '4 أيام أسبوعياً'] },
+        { en: ['Format', 'Digital PDF'], ar: ['الصيغة', 'ملف PDF رقمي'] },
+      ],
+    },
+    {
+      id: 'meal-guide',
+      type: 'digital',
+      category: 'nutrition',
+      price: 39,
+      name: { en: 'Meal & Calorie Guide', ar: 'دليل وجبات وسعرات محسوبة' },
+      desc: {
+        en: 'Simple meals with calories and protein worked out for you, from supermarket ingredients.',
+        ar: 'وجبات سهلة محسوبة السعرات والبروتين، بمكونات متوفرة في السوق المحلي.',
+      },
+      specs: [
+        { en: ['Recipes', '60+ meals'], ar: ['الوصفات', 'أكثر من 60 وجبة'] },
+        { en: ['Includes', 'Calories and macros'], ar: ['يشمل', 'السعرات والماكروز'] },
+        { en: ['Format', 'Digital PDF'], ar: ['الصيغة', 'ملف PDF رقمي'] },
+      ],
+    },
+    {
+      id: 'fabric-bands',
+      type: 'gear',
+      category: 'equipment',
+      price: 59,
+      name: { en: 'Fabric Resistance Bands', ar: 'حبال مقاومة قماشية' },
+      desc: {
+        en: 'Three wide loops for glutes and legs that stay in place and don’t roll up.',
+        ar: 'طقم من ثلاثة أحزمة عريضة للأرداف والأرجل، تثبت في مكانها ولا تلتف أثناء التمرين.',
+      },
+      specs: [
+        { en: ['Set', '3 resistance levels'], ar: ['الطقم', '3 مستويات مقاومة'] },
+        { en: ['Material', 'Stretch fabric with grip'], ar: ['الخامة', 'قماش مرن مانع للانزلاق'] },
+      ],
+    },
+    {
+      id: 'exercise-mat',
+      type: 'gear',
+      category: 'equipment',
+      price: 89,
+      name: { en: 'Non-slip Exercise Mat', ar: 'سجادة تمارين مانعة للانزلاق' },
+      desc: {
+        en: 'Grips on both sides and cushions your joints, with a strap to carry it.',
+        ar: 'سطح مانع للانزلاق من الجهتين يحمي المفاصل، مع حزام للحمل.',
+      },
+      specs: [
+        { en: ['Size', '183 × 61 cm'], ar: ['المقاس', '183 × 61 سم'] },
+        { en: ['Thickness', '6 mm'], ar: ['السماكة', '6 مم'] },
+      ],
+    },
+    {
+      id: 'speed-rope',
+      type: 'gear',
+      category: 'equipment',
+      price: 29,
+      name: { en: 'Pro Speed Jump Rope', ar: 'حبل قفز احترافي سريع' },
+      desc: {
+        en: 'A coated steel cable on ball-bearing handles for fast, smooth turns.',
+        ar: 'سلك فولاذي مغلّف بمقابض ذات محامل كروية لدوران سريع وسلس.',
+      },
+      specs: [
+        { en: ['Length', 'Adjustable up to 3 m'], ar: ['الطول', 'قابل للتعديل حتى 3 م'] },
+        { en: ['Handles', 'Ball bearings'], ar: ['المقابض', 'محامل كروية'] },
+      ],
+    },
+    {
+      id: 'shaker',
+      type: 'gear',
+      category: 'nutrition',
+      price: 35,
+      name: { en: 'Sports Shaker Bottle', ar: 'شيكر خلط رياضي' },
+      desc: {
+        en: 'Mixes protein smoothly with a steel whisk ball and a leak-proof lid.',
+        ar: 'يخلط البروتين بسلاسة بكرة خلط معدنية وغطاء محكم لا يسرّب.',
+      },
+      specs: [
+        { en: ['Capacity', '700 ml'], ar: ['السعة', '700 مل'] },
+        { en: ['Material', 'BPA-free'], ar: ['الخامة', 'خالٍ من BPA'] },
+      ],
+    },
+  ];
+
+  /*
+   * Checkout settings
+   *   demo         true until a real payment gateway is connected: shows a notice that no payment is taken
+   *   orderPrefix  start of the random order number, e.g. GYM-482913
+   */
+  const CHECKOUT = { demo: true, orderPrefix: 'GYM' };
+
+  return {
+    MUSCLES, LOCATIONS, LEVELS, GENDERS, PLANS, FOCUS, EXERCISES, WORKOUTS,
+    PRODUCT_TYPES, PRODUCTS, CHECKOUT,
+  };
 })();

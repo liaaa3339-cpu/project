@@ -3,7 +3,7 @@
    Caches the app so it opens offline once installed.
    Bump CACHE when you change any file so users get the update.
    ========================================================= */
-const CACHE = 'gymmy-v2';
+const CACHE = 'gymmy-v3';
 
 // Only './' for the page: hosts like Cloudflare redirect index.html to the
 // folder URL, and a cached redirect breaks navigations served from the cache.
@@ -14,6 +14,7 @@ const APP_SHELL = [
   'js/i18n.js',
   'js/timer.js',
   'js/app.js',
+  'js/shop.js',
   'manifest.webmanifest',
   'assets/icons/icon.svg',
   'assets/icons/icon-192.png',

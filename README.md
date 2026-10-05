@@ -1,6 +1,6 @@
 # Gymmy
 
-Workouts made easy. Gymmy is a small web app for finding exercises and ready-made workouts for home or the gym, in English and Arabic.
+Workouts made easy. Gymmy is a small web app for finding exercises and ready-made workouts for home or the gym, with a shop for digital plans and training gear, in English and Arabic.
 
 Plain HTML, CSS and JavaScript. No framework, no build step.
 
@@ -13,6 +13,9 @@ Plain HTML, CSS and JavaScript. No framework, no build step.
 - **Workouts**: 6 ready-made routines. The workout player steps through every set and starts the rest timer automatically between sets.
 - **Rest timer**: presets (30s, 60s, 90s, 2 min) and ±15s. A floating mini-timer stays visible on other tabs. When time is up it beeps, vibrates on phones and flashes.
 - **Favorites**: save exercises and workouts. They stay after a refresh (stored in the browser with `localStorage`).
+- **Shop**: digital plans and training gear on minimalist, image-free cards, with a category badge, spec rows and price in Saudi riyals. Filter by All, Digital plans or Training gear.
+- **Cart**: a cart button with a live count in the header opens a side drawer. Change quantities (1–10), remove items, and see the subtotal and total update. The cart is saved in `localStorage`.
+- **Checkout**: a quick form for name and Saudi mobile number (05XXXXXXXX, +966 or Arabic digits accepted) with mada and Apple Pay options. Confirming shows a success screen with a random order number and empties the cart. Payment is not connected yet (see below).
 - **Installable**: add it to your home screen, and it works offline after the first visit.
 - **Accessible**: full keyboard support, focus handling in dialogs, Esc to close, screen-reader labels and announcements, and reduced-motion support.
 
@@ -39,6 +42,7 @@ public/                      Everything that gets deployed
   js/i18n.js                 Interface text in English and Arabic
   js/timer.js                Shared countdown, beep and vibration
   js/app.js                  Rendering, filters, favorites, language, detail view, workout player
+  js/shop.js                 Shop grid, cart drawer and checkout (plugs into app.js)
   sw.js                      Service worker (offline cache)
   manifest.webmanifest       Install settings (name, icons, colors)
   assets/icons/              App icons
@@ -83,6 +87,30 @@ Add an entry to `WORKOUTS` in `public/js/data.js` with a `gender` (`'all'`, `'ma
 ### Change the sets, reps and rest rules
 
 Everything is in `PLANS` in `public/js/data.js`, organised by exercise type, gender and level. `FOCUS` controls which muscle groups are listed first for each gender. To give one exercise a different rep range, add a `reps` override to it (see `pull-up`).
+
+### Add or edit a product
+
+Products are in `PRODUCTS` in `public/js/data.js`:
+
+```js
+{
+  id: 'foam-roller',              // unique, used by the cart
+  type: 'gear',                   // 'digital' or 'gear' (drives the shop filter)
+  category: 'equipment',          // badge: 'program', 'nutrition' or 'equipment'
+  price: 69,                      // Saudi riyals, all-inclusive
+  name: { en: 'Foam Roller', ar: 'أسطوانة إطالة' },
+  desc: { en: '…', ar: '…' },
+  specs: [
+    { en: ['Length', '45 cm'], ar: ['الطول', '45 سم'] },
+  ],
+}
+```
+
+The cart total equals the subtotal because prices are all-inclusive. To add shipping, VAT or discounts later, change `totals()` in `public/js/shop.js`.
+
+### Payments
+
+Checkout is a demo: nothing is charged and orders aren't sent anywhere, and the form says so. Before taking real orders, connect a Saudi payment gateway that supports mada and Apple Pay, and somewhere to store orders. Then set `CHECKOUT.demo` to `false` in `public/js/data.js` to hide the demo notice.
 
 ### Change or add interface text
 

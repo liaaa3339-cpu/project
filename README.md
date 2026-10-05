@@ -48,7 +48,6 @@ public/                      Everything that gets deployed
   assets/icons/              App icons
   assets/images/             Put your exercise photos or GIFs here
 wrangler.jsonc               Cloudflare config (serves the public/ folder)
-.github/workflows/deploy.yml Deploys to Cloudflare on every push to main
 ```
 
 ## Editing content
@@ -118,10 +117,10 @@ Edit `public/js/i18n.js`. Every key exists in both `en` and `ar`. Counted phrase
 
 ### After changing files
 
-The service worker caches the app. When you deploy an update, change `CACHE` in `public/sw.js` (for example to `'gymmy-v2'`) so installed copies pick up the new files.
+The service worker caches the app. When you deploy an update, change `CACHE` in `public/sw.js` (for example from `'gymmy-v3'` to `'gymmy-v4'`) so installed copies pick up the new files.
 
 ## Deploy
 
-Every push to `main` deploys the `public/` folder to Cloudflare through the GitHub Actions workflow in `.github/workflows/deploy.yml`. The workflow needs the `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` repository secrets. To deploy by hand, run `npm run deploy`.
+Cloudflare is connected to this repository (Workers Builds). Every push to `main` builds and deploys the `public/` folder using the settings in `wrangler.jsonc`, and other branches trigger a preview build. To deploy by hand, run `npm run deploy`.
 
 It is a static site, so any other static host works too if you point it at the `public/` folder.

@@ -27,6 +27,7 @@
   <script src="js/i18n.js" defer></script>
   <script src="js/timer.js" defer></script>
   <script src="js/app.js" defer></script>
+  <script src="js/shop.js" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
@@ -52,6 +53,10 @@
     <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5 9-5zM3 13l9 5 9-5"/></symbol>
     <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 4h8v5a4 4 0 0 1-8 0V4zM8 6H4.5v1.5A3.5 3.5 0 0 0 8 11M16 6h3.5v1.5A3.5 3.5 0 0 1 16 11M12 13v4M8.5 20h7M10 17h4v3h-4z"/></symbol>
     <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M5.6 18.4l2.8-2.8M15.6 8.4l2.8-2.8"/></symbol>
+    <symbol id="i-bag" viewBox="0 0 24 24"><path d="M5.5 8h13l-1 12.5h-11L5.5 8z"/><path d="M9 10.5V7a3 3 0 0 1 6 0v3.5"/></symbol>
+    <symbol id="i-tag" viewBox="0 0 24 24"><path d="M20.4 13.6 13.6 20.4a1.5 1.5 0 0 1-2.1 0L3.5 12.4V3.5h8.9l8 8a1.5 1.5 0 0 1 0 2.1z"/><circle cx="8" cy="8" r="1.5"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
     <symbol id="i-skip" viewBox="0 0 24 24"><path d="M6 5.5v13l9-6.5z" fill="currentColor" stroke="none"/><path d="M18 5v14"/></symbol>
   </svg>
 
@@ -67,6 +72,10 @@
           <span class="tab__icon"><svg class="i" aria-hidden="true"><use href="#i-dumbbell"/></svg></span>
           <span class="tab__label" data-i18n="tabExplore">Explore</span>
         </a>
+        <a class="tab" href="#store" data-view="store">
+          <span class="tab__icon"><svg class="i" aria-hidden="true"><use href="#i-tag"/></svg></span>
+          <span class="tab__label" data-i18n="tabStore">Shop</span>
+        </a>
         <a class="tab" href="#favorites" data-view="favorites">
           <span class="tab__icon"><svg class="i" aria-hidden="true"><use href="#i-heart"/></svg><span class="tab__badge num" id="favBadge" hidden>0</span></span>
           <span class="tab__label" data-i18n="tabFavorites">Favorites</span>
@@ -77,10 +86,16 @@
         </a>
       </nav>
 
-      <button type="button" class="lang-btn" id="langBtn" data-action="lang" aria-label="Switch to Arabic">
-        <svg class="i" aria-hidden="true"><use href="#i-globe"/></svg>
-        <span id="langBtnText" lang="ar">العربية</span>
-      </button>
+      <div class="topbar__actions">
+        <button type="button" class="lang-btn" id="langBtn" data-action="lang" aria-label="Switch to Arabic">
+          <svg class="i" aria-hidden="true"><use href="#i-globe"/></svg>
+          <span id="langBtnText" lang="ar">العربية</span>
+        </button>
+        <button type="button" class="cart-btn" id="cartBtn" data-action="cart-open" aria-label="Your cart">
+          <svg class="i" aria-hidden="true"><use href="#i-bag"/></svg>
+          <span class="cart-btn__count num" id="cartCount" aria-hidden="true" hidden>0</span>
+        </button>
+      </div>
     </div>
   </header>
 
@@ -132,6 +147,22 @@
         <p class="empty__text" data-i18n="noResultsHint">Try removing a filter or searching for something else.</p>
         <button type="button" class="btn btn--ghost" data-action="clear-filters" data-i18n="clearAll">Clear all</button>
       </div>
+    </section>
+
+    <!-- ============ Store ============ -->
+    <section class="view" id="view-store" aria-labelledby="store-title" hidden>
+      <header class="page-head">
+        <p class="eyebrow" data-i18n="shop.eyebrow">Gymmy Store</p>
+        <h1 class="page-title" id="store-title" tabindex="-1" data-i18n="shop.title">Shop</h1>
+        <p class="page-lead" data-i18n="shop.lead">Digital plans and hand-picked training gear for home or the gym.</p>
+      </header>
+
+      <div class="shop-bar">
+        <div class="chips" id="shopFilters" role="group" aria-label="Product type" data-i18n-label="shop.filterLabel"></div>
+        <p class="shop-bar__note"><span id="productCount"></span> · <span data-i18n="shop.priceNote">Prices in Saudi riyals, all-inclusive.</span></p>
+      </div>
+
+      <div class="products" id="productGrid"></div>
     </section>
 
     <!-- ============ Favorites ============ -->
@@ -217,6 +248,8 @@
 
   <dialog class="sheet" id="sheet" aria-labelledby="sheetTitle"><div class="sheet__inner" id="sheetInner"></div></dialog>
   <dialog class="player" id="player" aria-labelledby="playerTitle"><div class="player__inner" id="playerInner"></div></dialog>
+  <dialog class="drawer" id="cart" aria-labelledby="cartTitle"><div class="drawer__inner" id="cartInner"></div></dialog>
+  <dialog class="sheet sheet--form" id="checkout" aria-labelledby="checkoutTitle"><div class="sheet__inner" id="checkoutInner"></div></dialog>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <div class="sr-only" id="announcer" aria-live="polite"></div>

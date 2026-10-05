@@ -11,7 +11,7 @@
   const STRINGS = window.GYMMY_I18N;
   const Timer = window.GymmyTimer;
 
-  const VIEWS = ['explore', 'favorites', 'timer'];
+  const VIEWS = ['explore', 'favorites', 'timer']; // extensions can add more (see GymmyApp.register)
   const PRESETS = [30, 60, 90, 120];
   const RING = 2 * Math.PI * 52; // circumference of the timer ring (r = 52 in a 120 viewBox)
 
@@ -933,9 +933,8 @@
   /* ---------- Feedback ---------- */
   // Toasts and announcements move into an open dialog so they stay visible and audible.
   function overlayHost() {
-    if (els.player.open) return els.player;
-    if (els.sheet.open) return els.sheet;
-    return document.body;
+    const open = $$('dialog[open]');
+    return open.length ? open[open.length - 1] : document.body;
   }
 
   let toastTimer = null;
@@ -977,6 +976,7 @@
   function renderView() {
     if (state.view === 'explore') renderExplore();
     else if (state.view === 'favorites') renderFavorites();
+    else if (extensionViews[state.view]) extensionViews[state.view]();
   }
 
   function route(fromUser) {
@@ -1023,6 +1023,7 @@
     renderView();
     if (state.sheet) renderSheet();
     if (player.active) renderPlayer();
+    languageHooks.forEach((hook) => hook());
     syncTimerUI();
   }
 
@@ -1141,6 +1142,27 @@
     } catch (e) { /* service workers unavailable here */ }
   }
 
+  /* ---------- Extensions ---------- */
+  // Other scripts (js/shop.js) add views, click actions and a language hook through this API.
+  const extensionViews = {};
+  const languageHooks = [];
+  let started = false;
+
+  window.GymmyApp = {
+    t, tp, L, esc, num, icon, toast, announce, refocus,
+    storage: store,
+    get view() { return state.view; },
+    register({ views = {}, actions: extraActions = {}, onLanguage } = {}) {
+      Object.entries(views).forEach(([name, render]) => {
+        if (!VIEWS.includes(name)) VIEWS.push(name);
+        extensionViews[name] = render;
+      });
+      Object.assign(actions, extraActions);
+      if (onLanguage) languageHooks.push(onLanguage);
+      if (started) route(false); // the page may have opened on one of the new views
+    },
+  };
+
   /* ---------- Start ---------- */
   applyLanguage();
   renderFilters();
@@ -1148,5 +1170,6 @@
   updateFavBadge();
   bindEvents();
   route(false);
+  started = true;
   window.addEventListener('load', registerServiceWorker);
 })();
